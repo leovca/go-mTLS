@@ -9,14 +9,14 @@ import (
 )
 
 func main() {
-	caCert, err := ioutil.ReadFile("../certs/cert.pem")
+	caCert, err := ioutil.ReadFile("../certs/ca.crt")
 	if err != nil {
 		log.Fatal(err)
 	}
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(caCert)
 
-	cert, err := tls.LoadX509KeyPair("../certs/cert.pem", "../certs/key.pem")
+	cert, err := tls.LoadX509KeyPair("../certs/client.crt", "../certs/client.key")
 	if err != nil {
 		log.Fatal(err)
 	}

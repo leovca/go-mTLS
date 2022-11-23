@@ -14,8 +14,7 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
-	caCert, err := ioutil.ReadFile("../certs/cert.pem")
+	caCert, err := ioutil.ReadFile("../certs/ca.crt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,8 +22,10 @@ func main() {
 	caCertPoll.AppendCertsFromPEM(caCert)
 
 	tlsConfig := &tls.Config{
-		ClientCAs:  caCertPoll,
+		ClientCAs: caCertPoll,
+		// ClientAuth: tls.RequireAndVerifyClientCert,
 		ClientAuth: tls.RequireAndVerifyClientCert,
+		ServerName: "localhost",
 	}
 
 	tlsConfig.BuildNameToCertificate()
@@ -36,5 +37,6 @@ func main() {
 
 	http.HandleFunc("/hello", helloHandler)
 	// log.Fatal(http.ListenAndServe(":8080", nil))
-	log.Fatal(server.ListenAndServeTLS("../certs/cert.pem", "../certs/key.pem"))
+	// log.Fatal(http.ListenAndServeTLS(":8443", "../certs/server.crt", "../certs/server.key", nil))
+	log.Fatal(server.ListenAndServeTLS("../certs/server.crt", "../certs/server.key"))
 }
